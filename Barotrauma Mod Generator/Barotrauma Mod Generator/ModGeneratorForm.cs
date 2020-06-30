@@ -1,5 +1,4 @@
-﻿using Barotrauma_Mod_Generator.XmlUtils;
-using System.IO;
+﻿using System.IO;
 using System.Windows.Forms;
 
 namespace Barotrauma_Mod_Generator
