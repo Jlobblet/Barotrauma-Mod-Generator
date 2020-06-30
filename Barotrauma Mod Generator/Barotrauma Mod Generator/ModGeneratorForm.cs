@@ -64,7 +64,7 @@ namespace Barotrauma_Mod_Generator
                 string inputDirectory = MultiInputTextBox.Text;
                 string outputDirecory = OutputDirectoryTextBox.Text;
                 Console.WriteLine("Creating files from diffs found in {0}", inputDirectory);
-                foreach (string inputDiff in Directory.EnumerateFiles(inputDirectory, "*.xml"))
+                foreach (string inputDiff in Directory.EnumerateFiles(inputDirectory, "*.xml", SearchOption.AllDirectories))
                 {
                     string outputFile = Path.Combine(outputDirecory, Path.GetFileName(inputDiff));
                     Console.WriteLine(inputDiff);
