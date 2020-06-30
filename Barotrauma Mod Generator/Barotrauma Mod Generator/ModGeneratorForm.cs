@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using Barotrauma_Mod_Generator.Util;
+using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Barotrauma_Mod_Generator
@@ -9,6 +11,8 @@ namespace Barotrauma_Mod_Generator
         {
             InitializeComponent();
             BaroDirectoryTextbox.Text = Settings.Default.BaroDirectory;
+            Console.SetOut(new MultiTextWriter(new ControlWriter(OutputRichTextBox), Console.Out));
+            Console.Out.NewLine = "\n";
         }
 
         private void BaroDirectoryBrowse_Click(object sender, System.EventArgs e)
