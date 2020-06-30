@@ -53,24 +53,18 @@ namespace Barotrauma_Mod_Generator
                 // single
                 string inputDiff = SingleInputTextBox.Text;
                 string outputDirectory = OutputDirectoryTextBox.Text;
-                string outputFile = Path.Combine(outputDirectory, Path.GetFileName(inputDiff));
-                Console.WriteLine("Creating file from {0}", inputDiff);
-                FormUtils.CreatePatchedFile(inputDiff, outputFile);
-                Console.WriteLine("Saved to {0}", outputFile);
+                FormUtils.CreatePatchedFile(inputDiff, outputDirectory);
             }
             else
             {
                 // multi
                 string inputDirectory = MultiInputTextBox.Text;
-                string outputDirecory = OutputDirectoryTextBox.Text;
+                string outputDirectory = OutputDirectoryTextBox.Text;
                 Console.WriteLine("Creating files from diffs found in {0}", inputDirectory);
                 foreach (string inputDiff in Directory.EnumerateFiles(inputDirectory, "*.xml", SearchOption.AllDirectories))
                 {
-                    string outputFile = Path.Combine(outputDirecory, Path.GetFileName(inputDiff));
-                    Console.WriteLine(inputDiff);
-                    Console.WriteLine(outputFile);
-                    Directory.CreateDirectory(Path.GetDirectoryName(outputFile));
-                    FormUtils.CreatePatchedFile(inputDiff, outputFile);
+                    string relativeOutputDirectory = Path.GetRelativePath(inputDirectory, inputDiff);
+                    FormUtils.CreatePatchedFile(inputDiff, Path.Combine(outputDirectory, relativeOutputDirectory));
                 }
                 Console.WriteLine("Finished!");
             }

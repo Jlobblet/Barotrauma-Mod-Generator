@@ -1,5 +1,6 @@
 ﻿using Barotrauma_Mod_Generator.PatchOperations;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -71,11 +72,15 @@ namespace Barotrauma_Mod_Generator
             }
         }
 
-        public static void CreatePatchedFile(string inputFilepath, string outputFilepath)
+        public static void CreatePatchedFile(string inputFilepath, string outputDirectory)
         {
+            string outputFile = Path.Combine(outputDirectory, Path.GetFileName(inputFilepath));
+            Directory.CreateDirectory(Path.GetDirectoryName(outputFile));
+            Console.WriteLine("Creating file from {0}", inputFilepath);
             XDocument diff = XDocument.Load(inputFilepath);
             XDocument patched = ApplyPatchOperation.ApplyAll(diff) ?? diff;
-            patched.Save(outputFilepath);
+            patched.Save(outputFile);
+            Console.WriteLine("Saved to {0}", outputFile);
         }
     }
 }
