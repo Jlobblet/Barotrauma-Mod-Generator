@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Diff file="C:\Program Files (x86)\Steam\steamapps\common\Barotrauma\Content\Characters\Mudraptor\Mudraptor.xml" override="root">
+	<replace sel="/Character/ai/@aggressionhurt">100</replace>
+	<replace sel="/Character/ai/target[@tag='weapon']/@priority">210</replace>
+	<replace sel="/Character/ai/target[@tag='nasonov']/@priority">250</replace>
+	<replace sel="/Character/ai/target[@tag='human']/@priority">200</replace>
+	<replace sel="/Character/ai/target[@tag='tool']/@state">Attack</replace>
+	<replace sel="/Character/ai/target[@tag='tool']/@priority">205</replace>
+	<remove sel="/Character/ai/target[@tag='tool']/@reactdistance"/>
+	<replace sel="/Character/ai/target[@tag='dead']/@priority">200</replace>
+	<replace sel="/Character/ai/target[@tag='door']/@priority">180</replace>
+	<remove sel="/Character/ai/target[@tag='turret']"/>
+</Diff>

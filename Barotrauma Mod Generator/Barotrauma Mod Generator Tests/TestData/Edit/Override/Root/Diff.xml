@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Diff file="TestData/TestInput.xml" override="root">
+	<replace sel="/*/Item[@identifier='harmonica']/@price">500</replace>
+</Diff>
