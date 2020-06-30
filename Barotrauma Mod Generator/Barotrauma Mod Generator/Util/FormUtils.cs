@@ -74,7 +74,7 @@ namespace Barotrauma_Mod_Generator
         public static void CreatePatchedFile(string inputFilepath, string outputFilepath)
         {
             XDocument diff = XDocument.Load(inputFilepath);
-            XDocument patched = ApplyPatchOperation.ApplyAll(diff);
+            XDocument patched = ApplyPatchOperation.ApplyAll(diff) ?? diff;
             patched.Save(outputFilepath);
         }
     }
