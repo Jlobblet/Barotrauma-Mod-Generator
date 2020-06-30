@@ -83,12 +83,12 @@
             this.BaroDirectoryBrowse.UseVisualStyleBackColor = true;
             this.BaroDirectoryBrowse.Click += new System.EventHandler(this.BaroDirectoryBrowse_Click);
             // 
-            // OutputDirectoryTextbox
+            // OutputDirectoryTextBox
             // 
             this.OutputDirectoryTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.OutputDirectoryTextBox.Location = new System.Drawing.Point(6, 26);
-            this.OutputDirectoryTextBox.Name = "OutputDirectoryTextbox";
+            this.OutputDirectoryTextBox.Name = "OutputDirectoryTextBox";
             this.OutputDirectoryTextBox.Size = new System.Drawing.Size(719, 27);
             this.OutputDirectoryTextBox.TabIndex = 2;
             // 
@@ -216,6 +216,7 @@
             this.OutputRichTextBox.Size = new System.Drawing.Size(628, 58);
             this.OutputRichTextBox.TabIndex = 8;
             this.OutputRichTextBox.Text = "";
+            this.OutputRichTextBox.TextChanged += new System.EventHandler(this.OutputRichTextBox_TextChanged);
             // 
             // ModGeneratorForm
             // 

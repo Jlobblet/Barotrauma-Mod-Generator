@@ -69,5 +69,10 @@ namespace Barotrauma_Mod_Generator
                 }
             }
         }
+        private void OutputRichTextBox_TextChanged(object sender, EventArgs e)
+        {
+            OutputRichTextBox.SelectionStart = OutputRichTextBox.Text.Length;
+            OutputRichTextBox.ScrollToCaret();
+        }
     }
 }
