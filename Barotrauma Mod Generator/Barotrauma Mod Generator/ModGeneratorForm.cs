@@ -48,23 +48,26 @@ namespace Barotrauma_Mod_Generator
 
         private void GoButton_Click(object sender, EventArgs e)
         {
+            string baroRootDirectory = BaroDirectoryTextbox.Text;
+            if (!Directory.Exists(baroRootDirectory)) { throw new ArgumentException("The Barotrauma Root Directory provided does not exist."); }
+            string outputDirectory = OutputDirectoryTextBox.Text;
+            if (!Directory.Exists(outputDirectory)) { throw new ArgumentException("The output directory provided does not exist."); }
             if (ModeTabControl.SelectedTab == ModeTabControl.TabPages[0])
             {
                 // single
                 string inputDiff = SingleInputTextBox.Text;
-                string outputDirectory = OutputDirectoryTextBox.Text;
-                FormUtils.CreatePatchedFile(inputDiff, outputDirectory, BaroDirectoryTextbox.Text);
+                FormUtils.CreatePatchedFile(inputDiff, outputDirectory, baroRootDirectory);
             }
             else
             {
                 // multi
                 string inputDirectory = MultiInputTextBox.Text;
-                string outputDirectory = OutputDirectoryTextBox.Text;
                 Console.WriteLine("Creating files from diffs found in {0}", inputDirectory);
                 foreach (string inputDiff in Directory.EnumerateFiles(inputDirectory, "*.xml", SearchOption.AllDirectories))
                 {
                     string relativeOutputDirectory = Path.GetRelativePath(inputDirectory, inputDiff);
-                    FormUtils.CreatePatchedFile(inputDiff, Path.Combine(outputDirectory, relativeOutputDirectory), BaroDirectoryTextbox.Text);
+                    string outputFileDirectory = Path.Combine(outputDirectory, relativeOutputDirectory);
+                        FormUtils.CreatePatchedFile(inputDiff, outputFileDirectory, baroRootDirectory);
                 }
                 Console.WriteLine("Finished!");
             }
