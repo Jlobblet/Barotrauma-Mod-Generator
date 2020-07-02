@@ -15,7 +15,7 @@ namespace Barotrauma_Mod_Generator
             Console.Out.NewLine = "\n";
         }
 
-        private void BaroDirectoryBrowse_Click(object sender, System.EventArgs e)
+        private void BaroDirectoryBrowse_Click(object sender, EventArgs e)
         {
             string filepath = FormUtils.ShowFolderBrowserDialog();
             BaroDirectoryTextbox.Text = filepath;
@@ -23,30 +23,30 @@ namespace Barotrauma_Mod_Generator
             Settings.Default.Save();
         }
 
-        private void OutputDirectoryBrowse_Click(object sender, System.EventArgs e)
+        private void OutputDirectoryBrowse_Click(object sender, EventArgs e)
         {
             string filepath = FormUtils.ShowFolderBrowserDialog(BaroDirectoryTextbox.Text == "" ? BaroDirectoryTextbox.Text : null);
             OutputDirectoryTextBox.Text = filepath;
         }
 
-        private void SingleInputBrowse_Click(object sender, System.EventArgs e)
+        private void SingleInputBrowse_Click(object sender, EventArgs e)
         {
             string filepath = FormUtils.ShowFileBrowserDialog(".xml");
             SingleInputTextBox.Text = filepath;
         }
 
-        private void MultiInputBrowseButton_Click(object sender, System.EventArgs e)
+        private void MultiInputBrowseButton_Click(object sender, EventArgs e)
         {
             string filepath = FormUtils.ShowFolderBrowserDialog(BaroDirectoryTextbox.Text == "" ? BaroDirectoryTextbox.Text : null);
             MultiInputTextBox.Text = filepath;
         }
 
-        private void ModeTabControl_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void ModeTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
 
-        private void GoButton_Click(object sender, System.EventArgs e)
+        private void GoButton_Click(object sender, EventArgs e)
         {
             if (ModeTabControl.SelectedTab == ModeTabControl.TabPages[0])
             {
