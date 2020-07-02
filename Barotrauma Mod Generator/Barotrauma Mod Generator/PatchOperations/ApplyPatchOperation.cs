@@ -18,8 +18,8 @@ namespace Barotrauma_Mod_Generator.PatchOperations
         {
             XDocument document = null;
             string file = diff.Root.GetAttributeSafe("file");
-            file = DiffUtils.RelativeToAbsoluteFilepath(file, relativeDirectory);
             if (file == null) { return document; }
+            file = DiffUtils.RelativeToAbsoluteFilepath(file, relativeDirectory);
             document = XDocument.Load(file);
             document = ApplyAll(diff, document);
             return document;
