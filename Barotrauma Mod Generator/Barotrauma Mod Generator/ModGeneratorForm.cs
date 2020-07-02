@@ -53,7 +53,7 @@ namespace Barotrauma_Mod_Generator
                 // single
                 string inputDiff = SingleInputTextBox.Text;
                 string outputDirectory = OutputDirectoryTextBox.Text;
-                FormUtils.CreatePatchedFile(inputDiff, outputDirectory);
+                FormUtils.CreatePatchedFile(inputDiff, outputDirectory, BaroDirectoryTextbox.Text);
             }
             else
             {
@@ -64,7 +64,7 @@ namespace Barotrauma_Mod_Generator
                 foreach (string inputDiff in Directory.EnumerateFiles(inputDirectory, "*.xml", SearchOption.AllDirectories))
                 {
                     string relativeOutputDirectory = Path.GetRelativePath(inputDirectory, inputDiff);
-                    FormUtils.CreatePatchedFile(inputDiff, Path.Combine(outputDirectory, relativeOutputDirectory));
+                    FormUtils.CreatePatchedFile(inputDiff, Path.Combine(outputDirectory, relativeOutputDirectory), BaroDirectoryTextbox.Text);
                 }
                 Console.WriteLine("Finished!");
             }

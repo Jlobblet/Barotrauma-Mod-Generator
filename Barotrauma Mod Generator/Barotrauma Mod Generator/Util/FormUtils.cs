@@ -72,13 +72,23 @@ namespace Barotrauma_Mod_Generator
             }
         }
 
-        public static void CreatePatchedFile(string inputFilepath, string outputDirectory)
+        public static void CreatePatchedFile(string inputFilepath, string outputDirectory, string baroDirectory)
         {
             string outputFile = Path.Combine(outputDirectory, Path.GetFileName(inputFilepath));
             Directory.CreateDirectory(Path.GetDirectoryName(outputFile));
             Console.WriteLine("Creating file from {0}", inputFilepath);
             XDocument diff = XDocument.Load(inputFilepath);
-            XDocument patched = ApplyPatchOperation.ApplyAll(diff) ?? diff;
+            // if the input file is not a diff, assume it is a non-diff mod file to be copied across
+            XDocument patched;
+            if (Directory.Exists(baroDirectory))
+            {
+                patched = ApplyPatchOperation.ApplyAll(diff, baroDirectory) ?? diff;
+            }
+            else
+            {
+                patched = ApplyPatchOperation.ApplyAll(diff) ?? diff;
+            }
+
             patched.Save(outputFile);
             Console.WriteLine("Saved to {0}", outputFile);
         }
