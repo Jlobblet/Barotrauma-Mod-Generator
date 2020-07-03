@@ -6,8 +6,9 @@ namespace Barotrauma_Mod_Generator.PatchOperations
 {
     internal sealed class PatchOperationRemove : PatchOperation
     {
+#pragma warning disable IDE0051
         private new readonly string ElementName = "remove";
-
+#pragma warning restore IDE0051
         internal static new XDocument Apply(XElement patch, XDocument document)
         {
             XAttribute xpath = patch.Attribute("sel");
