@@ -74,7 +74,7 @@ namespace Barotrauma_Mod_Generator
                     }
                     else
                     {
-                        File.Copy(inputDiff, Path.Combine(outputFileDirectory, Path.GetFileName(inputDiff)));
+                        File.Copy(inputDiff, Path.Combine(outputFileDirectory, Path.GetFileName(inputDiff)), true);
                     }
                 }
                 Console.WriteLine("Finished!");
