@@ -4,26 +4,32 @@ using System.Xml.XPath;
 
 namespace Barotrauma_Mod_Generator.PatchOperations
 {
-    internal sealed class PatchOperationEdit : PatchOperation
+    internal class PatchOperationEdit : PatchOperation
     {
-#pragma warning disable IDE0051
-        private new readonly string ElementName = "replace";
-#pragma warning restore IDE0051
-        internal static new XDocument Apply(XElement patch, XDocument document)
+        private const string ElementName = "replace";
+
+        internal new static XDocument Apply(XElement patch, XDocument document)
         {
             XAttribute xpath = patch.Attribute("sel");
-            if (xpath == null) { return document; }
-            foreach (XObject xObject in (IEnumerable)document.XPathEvaluate(xpath.Value))
+            if (xpath == null)
             {
-                if (xObject is XAttribute attribute)
+                return document;
+            }
+
+            foreach (XObject xObject in
+                (IEnumerable) document.XPathEvaluate(xpath.Value))
+            {
+                switch (xObject)
                 {
-                    attribute.Value = patch.Value;
-                }
-                else if (xObject is XElement element)
-                {
-                    element.Value = patch.Value;
+                    case XAttribute attribute:
+                        attribute.Value = patch.Value;
+                        break;
+                    case XElement element:
+                        element.Value = patch.Value;
+                        break;
                 }
             }
+
             return document;
         }
     }

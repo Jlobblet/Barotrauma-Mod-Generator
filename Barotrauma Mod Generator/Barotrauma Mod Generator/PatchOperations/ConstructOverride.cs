@@ -1,20 +1,22 @@
-﻿using Barotrauma_Mod_Generator.XmlUtils;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
+using Barotrauma_Mod_Generator.Util;
 
 namespace Barotrauma_Mod_Generator.PatchOperations
 {
-    internal sealed class ConstructOverride
+    internal static class ConstructOverride
     {
         public static void Override(XElement elt)
         {
-            XElement ItemElement = elt.GetSecondLevelAncestor();
-            if (ItemElement.Name.LocalName != "Override")
+            XElement itemElement = elt.GetSecondLevelAncestor();
+            if (itemElement.Name.LocalName == "Override")
             {
-                XElement OverrideElement = new XElement("Override");
-                OverrideElement.Add(ItemElement);
-                elt.Document.Root.Add(OverrideElement);
-                ItemElement.Remove();
+                return;
             }
+
+            var overrideElement = new XElement("Override");
+            overrideElement.Add(itemElement);
+            elt.Document?.Root?.Add(overrideElement);
+            itemElement.Remove();
         }
 
         public static XDocument OverrideRoot(XDocument doc)

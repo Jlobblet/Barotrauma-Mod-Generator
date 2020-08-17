@@ -1,36 +1,36 @@
-﻿using Barotrauma_Mod_Generator.PatchOperations;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using Barotrauma_Mod_Generator.PatchOperations;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace Barotrauma_Mod_Generator
+namespace Barotrauma_Mod_Generator.Util
 {
-    internal class FormUtils
+    internal static class FormUtils
     {
         public static string ShowFolderBrowserDialog()
         {
-            using CommonOpenFileDialog dialog = new CommonOpenFileDialog
-            {
-                IsFolderPicker = true,
-                EnsureFileExists = true,
-                EnsurePathExists = true,
-            };
+            using var dialog = new CommonOpenFileDialog
+                               {
+                                   IsFolderPicker = true,
+                                   EnsureFileExists = true,
+                                   EnsurePathExists = true,
+                               };
             return dialog.ShowDialog() == CommonFileDialogResult.Ok ? dialog.FileName : "";
         }
-
-        public static string ShowFolderBrowserDialog(string DefaultDirectory = null)
+        
+        public static string ShowFolderBrowserDialog(string defaultDirectory)
         {
             using CommonOpenFileDialog dialog = new CommonOpenFileDialog
             {
                 IsFolderPicker = true,
                 EnsureFileExists = true,
                 EnsurePathExists = true,
-                DefaultDirectory = DefaultDirectory,
+                DefaultDirectory = defaultDirectory,
             };
             return dialog.ShowDialog() == CommonFileDialogResult.Ok ? dialog.FileName : "";
         }
@@ -44,16 +44,16 @@ namespace Barotrauma_Mod_Generator
             };
             dialog.FileOk += (sender, parameter) =>
             {
-                CommonOpenFileDialog Dialog = (CommonOpenFileDialog)sender;
-                Collection<string> filenames = new Collection<string>();
+                var commonOpenFileDialog = (CommonOpenFileDialog)sender;
+                var filenames = new Collection<string>();
                 typeof(CommonOpenFileDialog)
                     .GetMethod("PopulateWithFileNames", BindingFlags.Instance | BindingFlags.NonPublic)
-                    .Invoke(dialog, new[] { filenames });
+                    ?.Invoke(commonOpenFileDialog, new object[] { filenames });
                 string filename = filenames[0];
                 if (extension != "" && Path.GetExtension(filename) != extension)
                 {
                     parameter.Cancel = true;
-                    MessageBox.Show("The selected file does not have the extension " + extension + ".", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"The selected file does not have the extension {extension}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             };
             return dialog.ShowDialog() == CommonFileDialogResult.Ok ? dialog.FileName : "";

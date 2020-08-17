@@ -8,20 +8,20 @@ namespace Barotrauma_Mod_Generator.Util
 {
     public class ControlWriter : TextWriter
     {
-        private readonly Control textbox;
+        private readonly Control _textbox;
         public ControlWriter(Control textbox)
         {
-            this.textbox = textbox;
+            _textbox = textbox;
         }
 
         public override void Write(char value)
         {
-            textbox.Text += value;
+            _textbox.Text += value;
         }
 
         public override void Write(string value)
         {
-            textbox.Text += value;
+            _textbox.Text += value;
         }
 
         public override Encoding Encoding => Encoding.ASCII;
@@ -29,19 +29,19 @@ namespace Barotrauma_Mod_Generator.Util
 
     public class MultiTextWriter : TextWriter
     {
-        private readonly IEnumerable<TextWriter> writers;
+        private readonly IEnumerable<TextWriter> _writers;
         public MultiTextWriter(IEnumerable<TextWriter> writers)
         {
-            this.writers = writers.ToList();
+            _writers = writers.ToList();
         }
         public MultiTextWriter(params TextWriter[] writers)
         {
-            this.writers = writers;
+            _writers = writers;
         }
 
         public override void Write(char value)
         {
-            foreach (TextWriter writer in writers)
+            foreach (TextWriter writer in _writers)
             {
                 writer.Write(value);
             }
@@ -49,7 +49,7 @@ namespace Barotrauma_Mod_Generator.Util
 
         public override void Write(string value)
         {
-            foreach (TextWriter writer in writers)
+            foreach (TextWriter writer in _writers)
             {
                 writer.Write(value);
             }
@@ -57,7 +57,7 @@ namespace Barotrauma_Mod_Generator.Util
 
         public override void Flush()
         {
-            foreach (TextWriter writer in writers)
+            foreach (TextWriter writer in _writers)
             {
                 writer.Flush();
             }
@@ -65,7 +65,7 @@ namespace Barotrauma_Mod_Generator.Util
 
         public override void Close()
         {
-            foreach (TextWriter writer in writers)
+            foreach (TextWriter writer in _writers)
             {
                 writer.Close();
             }

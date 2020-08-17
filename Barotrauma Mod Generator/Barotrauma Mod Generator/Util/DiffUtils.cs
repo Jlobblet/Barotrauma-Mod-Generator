@@ -1,11 +1,12 @@
 ﻿using System.IO;
 using System.Xml.Linq;
+// ReSharper disable PossibleNullReferenceException
 
-namespace Barotrauma_Mod_Generator.XmlUtils
+namespace Barotrauma_Mod_Generator.Util
 {
     public static class DiffUtils
     {
-        public static void CleanHeader(XDocument diff, XDocument document, out bool OverrideRoot)
+        public static void CleanHeader(XDocument diff, XDocument document, out bool overrideRoot)
         {
             if (diff.Root.GetAttributeSafe("override") == null)
             {
@@ -15,16 +16,14 @@ namespace Barotrauma_Mod_Generator.XmlUtils
             {
                 diff.Root.SetAttributeValue("cleanup", "false");
             }
-            OverrideRoot = false;
+            overrideRoot = false;
             switch (diff.Root.Attribute("override").Value)
             {
                 case "all":
                     document.Root.Name = "Override";
                     break;
                 case "root":
-                    OverrideRoot = true;
-                    break;
-                default:
+                    overrideRoot = true;
                     break;
             }
         }

@@ -5,25 +5,19 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
-namespace Barotrauma_Mod_Generator.XmlUtils
+namespace Barotrauma_Mod_Generator.Util
 {
-    public static class XMLUtils
+    public static class XmlUtils
     {
         public static XElement GetSecondLevelAncestor(this XElement element)
         {
             IEnumerable<XElement> ancestors = element.Ancestors().Prepend(element);
             // Handle root behaviour
-            if (ancestors.Count() == 1)
-            {
-                return element;
-            }
-            else
-            {
-                return ancestors.ElementAt(ancestors.Count() - 2);
-            }
+            IEnumerable<XElement> elements = ancestors.ToList();
+            return elements.Count() == 1 ? element : elements.ElementAt(elements.Count() - 2);
         }
 
-        public static int IndexPosition(this XElement element)
+        private static int IndexPosition(this XElement element)
         {
             if (element == null)
             {
@@ -35,7 +29,7 @@ namespace Barotrauma_Mod_Generator.XmlUtils
                 return -1;
             }
 
-            int index = 1;
+            var index = 1;
             foreach (XElement sibling in element.Parent.Elements(element.Name))
             {
                 if (sibling == element)
@@ -47,19 +41,12 @@ namespace Barotrauma_Mod_Generator.XmlUtils
             throw new InvalidOperationException("Element could not be found");
         }
 
-        public static string GetRelativeXPath(XElement element)
+        private static string GetRelativeXPath(XElement element)
         {
             int index = element.IndexPosition();
             string name = element.Name.LocalName;
 
-            if (index == -1)
-            {
-                return string.Format("/{0}", name);
-            }
-            else
-            {
-                return string.Format("/{0}[{1}]", name, index.ToString());
-            }
+            return index == -1 ? $"/{name}" : $"/{name}[{index.ToString()}]";
         }
 
         public static string GetAbsoluteXPath(this XElement element)
@@ -75,11 +62,8 @@ namespace Barotrauma_Mod_Generator.XmlUtils
 
         public static string GetAttributeSafe(this XElement element, string attribute)
         {
-            if (element.Attribute(attribute) == null)
-            {
-                return null;
-            }
-            return element.Attribute(attribute).Value;
+            // ReSharper disable once PossibleNullReferenceException
+            return element.Attribute(attribute) == null ? null : element.Attribute(attribute).Value;
         }
 
         public static string GetAttributeSafe(this XElement element, string attribute, out string value)
@@ -110,23 +94,20 @@ namespace Barotrauma_Mod_Generator.XmlUtils
             return bool.TryParse(element.GetAttributeSafe(attribute), out value);
         }
 
-        public static XElement GetElement(this XObject @object)
+        private static XElement GetElement(this XObject @object)
         {
-            XElement elt = null;
-            if (@object is XAttribute attribute)
-            {
-                elt = attribute.Parent;
-            }
-            else if (@object is XElement element)
-            {
-                elt = element;
-            }
+            XElement elt = @object switch
+                           {
+                               XAttribute attribute => attribute.Parent,
+                               XElement element => element,
+                               _ => null,
+                           };
             return elt;
         }
         public static HashSet<string> GetFilteredXPaths(XDocument diff, XDocument document, Func<XElement, XElement, bool> filter = null)
         {
-            HashSet<string> FilteredXPaths = new HashSet<string>();
-            foreach (XElement patch in diff.Root.Elements())
+            HashSet<string> filteredXPaths = new HashSet<string>();
+            foreach (XElement patch in diff.Root?.Elements())
             {
                 string xpath = patch.GetAttributeSafe("sel");
                 if (xpath == null) { continue; }
@@ -135,11 +116,11 @@ namespace Barotrauma_Mod_Generator.XmlUtils
                     XElement elt = obj.GetElement();
                     if (filter == null || filter(patch, elt))
                     {
-                        FilteredXPaths.Add(elt.GetSecondLevelAncestor().GetAbsoluteXPath());
+                        filteredXPaths.Add(elt.GetSecondLevelAncestor().GetAbsoluteXPath());
                     }
                 }
             }
-            return FilteredXPaths;
+            return filteredXPaths;
         }
     }
 }

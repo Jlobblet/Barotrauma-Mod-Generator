@@ -1,13 +1,13 @@
-﻿using Barotrauma_Mod_Generator.XmlUtils;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using Barotrauma_Mod_Generator.Util;
 
 namespace Barotrauma_Mod_Generator.PatchOperations
 {
-    public sealed class ApplyPatchOperation
+    public static class ApplyPatchOperation
     {
         public static XDocument ApplyAll(XDocument diff)
         {
@@ -16,69 +16,70 @@ namespace Barotrauma_Mod_Generator.PatchOperations
 
         public static XDocument ApplyAll(XDocument diff, string relativeDirectory)
         {
-            XDocument document = null;
             string file = diff.Root.GetAttributeSafe("file");
-            if (file == null) { return document; }
+            if (file == null)
+            {
+                throw new ArgumentNullException(nameof(diff));
+            }
+
             file = DiffUtils.RelativeToAbsoluteFilepath(file, relativeDirectory);
-            document = XDocument.Load(file);
+            XDocument document = XDocument.Load(file);
             document = ApplyAll(diff, document);
             return document;
         }
 
         private static XDocument ApplyAll(XDocument diff, XDocument document)
         {
-            DiffUtils.CleanHeader(diff, document, out bool OverrideRoot);
-            
-            HashSet<string> OverrideXpaths =
-                XMLUtils.GetFilteredXPaths(diff, document,
+            DiffUtils.CleanHeader(diff, document, out bool overrideRoot);
+
+            HashSet<string> overrideXpaths =
+                XmlUtils.GetFilteredXPaths(diff, document,
                                            (patch, elt) =>
                                                patch.ParseBoolAttribute("override"));
-            HashSet<string> SaveXpaths =
-                XMLUtils.GetFilteredXPaths(diff, document,
+            HashSet<string> saveXpaths =
+                XmlUtils.GetFilteredXPaths(diff, document,
                                            (patch, elt) =>
                                                !patch.ParseBoolAttribute("override"));
 
-            foreach (XElement patch in diff.Root.Elements())
-            {
-                document = Apply(patch, document);
-            }
+            document = diff.Root?.Elements()
+                           .Aggregate(document,
+                                      (current, patch) => Apply(patch, current));
+            
             diff.Root.ParseBoolAttribute("cleanup", out bool cleanup);
-            if (cleanup)
+            
+            if (cleanup && document?.Root != null)
             {
                 foreach (XElement element in document.Root.Elements().Reverse())
                 {
                     string xpath = element.GetAbsoluteXPath();
-                    if (OverrideXpaths.Contains(xpath))
+                    if (overrideXpaths.Contains(xpath))
                     {
                         ConstructOverride.Override(element);
                     }
-                    else if (!SaveXpaths.Contains(xpath))
+                    else if (!saveXpaths.Contains(xpath))
                     {
                         element.Remove();
                     }
                 }
             }
-            if (OverrideRoot)
+
+            if (overrideRoot)
             {
                 document = ConstructOverride.OverrideRoot(document);
             }
+
             return document;
         }
 
         private static XDocument Apply(XElement patch, XDocument document)
         {
-            switch (patch.Name.LocalName)
-            {
-                case "add":
-                    document = PatchOperationAdd.Apply(patch, document);
-                    break;
-                case "remove":
-                    document = PatchOperationRemove.Apply(patch, document);
-                    break;
-                case "replace":
-                    document = PatchOperationEdit.Apply(patch, document);
-                    break;
-            }
+            document = patch.Name.LocalName switch
+                       {
+                           "add" => PatchOperationAdd.Apply(patch, document),
+                           "remove" => PatchOperationRemove.Apply(patch, document),
+                           "replace" => PatchOperationEdit.Apply(patch, document),
+                           _ => document
+                       };
             return document;
         }
     }
