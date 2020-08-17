@@ -19,7 +19,7 @@ namespace Barotrauma_Mod_Generator.PatchOperations
             string file = diff.Root.GetAttributeSafe("file");
             if (file == null)
             {
-                throw new ArgumentNullException(nameof(diff));
+                return null;
             }
 
             file = DiffUtils.RelativeToAbsoluteFilepath(file, relativeDirectory);
