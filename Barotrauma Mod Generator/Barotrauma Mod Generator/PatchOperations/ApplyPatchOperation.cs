@@ -28,6 +28,15 @@ namespace Barotrauma_Mod_Generator.PatchOperations
         private static XDocument ApplyAll(XDocument diff, XDocument document)
         {
             DiffUtils.CleanHeader(diff, document, out bool OverrideRoot);
+            
+            HashSet<string> OverrideXpaths =
+                XMLUtils.GetFilteredXPaths(diff, document,
+                                           (patch, elt) =>
+                                               patch.ParseBoolAttribute("override"));
+            HashSet<string> SaveXpaths =
+                XMLUtils.GetFilteredXPaths(diff, document,
+                                           (patch, elt) =>
+                                               !patch.ParseBoolAttribute("override"));
 
             foreach (XElement patch in diff.Root.Elements())
             {
@@ -36,8 +45,6 @@ namespace Barotrauma_Mod_Generator.PatchOperations
             diff.Root.ParseBoolAttribute("cleanup", out bool cleanup);
             if (cleanup)
             {
-                HashSet<string> OverrideXpaths = XMLUtils.GetFilteredXPaths(diff, document, (patch, elt) => patch.ParseBoolAttribute("override"));
-                HashSet<string> SaveXpaths = XMLUtils.GetFilteredXPaths(diff, document, (patch, elt) => !patch.ParseBoolAttribute("override"));
                 foreach (XElement element in document.Root.Elements().Reverse())
                 {
                     string xpath = element.GetAbsoluteXPath();
