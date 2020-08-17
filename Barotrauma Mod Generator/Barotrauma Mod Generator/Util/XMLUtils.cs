@@ -46,7 +46,7 @@ namespace Barotrauma_Mod_Generator.Util
             int index = element.IndexPosition();
             string name = element.Name.LocalName;
 
-            return index == -1 ? $"/{name}" : $"/{name}[{index.ToString()}]";
+            return index == -1 ? $"/{name}" : $"/{name}[{index}]";
         }
 
         public static string GetAbsoluteXPath(this XElement element)
@@ -63,7 +63,7 @@ namespace Barotrauma_Mod_Generator.Util
         public static string GetAttributeSafe(this XElement element, string attribute)
         {
             // ReSharper disable once PossibleNullReferenceException
-            return element.Attribute(attribute) == null ? null : element.Attribute(attribute).Value;
+            return element.Attribute(attribute)?.Value;
         }
 
         public static string GetAttributeSafe(this XElement element, string attribute, out string value)
