@@ -6,7 +6,7 @@ namespace Barotrauma_Mod_Generator.Util
 {
     public static class DiffUtils
     {
-        public static void CleanHeader(XDocument diff, XDocument document, out bool overrideRoot)
+        public static void CleanHeader(XDocument diff, XDocument document, out RootBehaviour overrideRoot)
         {
             if (diff.Root.GetAttributeSafe("override") == null)
             {
@@ -16,14 +16,17 @@ namespace Barotrauma_Mod_Generator.Util
             {
                 diff.Root.SetAttributeValue("cleanup", "false");
             }
-            overrideRoot = false;
+            overrideRoot = RootBehaviour.None;
             switch (diff.Root.Attribute("override").Value)
             {
                 case "all":
                     document.Root.Name = "Override";
                     break;
                 case "root":
-                    overrideRoot = true;
+                    overrideRoot = RootBehaviour.Override;
+                    break;
+                case "rootreplace":
+                    overrideRoot = RootBehaviour.OverrideReplace;
                     break;
             }
         }

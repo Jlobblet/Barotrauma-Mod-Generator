@@ -30,7 +30,7 @@ namespace Barotrauma_Mod_Generator.PatchOperations
 
         private static XDocument ApplyAll(XDocument diff, XDocument document)
         {
-            DiffUtils.CleanHeader(diff, document, out bool overrideRoot);
+            DiffUtils.CleanHeader(diff, document, out RootBehaviour overrideRoot);
 
             HashSet<string> overrideXpaths =
                 XmlUtils.GetFilteredXPaths(diff, document,
@@ -63,9 +63,14 @@ namespace Barotrauma_Mod_Generator.PatchOperations
                 }
             }
 
-            if (overrideRoot)
+            switch (overrideRoot)
             {
-                document = ConstructOverride.OverrideRoot(document);
+                case RootBehaviour.Override:
+                    document = ConstructOverride.OverrideRoot(document);
+                    break;
+                case RootBehaviour.OverrideReplace:
+                    document.Root.Name = "Override";
+                    break;
             }
 
             return document;
