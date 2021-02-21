@@ -71,6 +71,10 @@ namespace Barotrauma_Mod_Generator.PatchOperations
                 case RootBehaviour.OverrideReplace:
                     document.Root.Name = "Override";
                     break;
+                case RootBehaviour.None:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(overrideRoot));
             }
 
             return document;
