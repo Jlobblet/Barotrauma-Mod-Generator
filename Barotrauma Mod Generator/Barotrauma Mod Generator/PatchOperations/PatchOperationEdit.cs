@@ -25,7 +25,16 @@ namespace Barotrauma_Mod_Generator.PatchOperations
                         attribute.Value = patch.Value;
                         break;
                     case XElement element:
-                        element.Value = patch.Value;
+                        if (string.IsNullOrWhiteSpace(patch.Value) && patch.HasElements)
+                        {
+                            element.Elements().Remove();
+                            element.Add(patch.Elements());
+                        }
+                        else
+                        {
+                            element.Value = patch.Value;
+                        }
+
                         break;
                 }
             }
