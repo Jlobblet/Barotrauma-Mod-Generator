@@ -17,10 +17,7 @@ namespace Barotrauma_Mod_Generator.PatchOperations
         public static XDocument ApplyAll(XDocument diff, string relativeDirectory)
         {
             string file = diff.Root.GetAttributeSafe("file");
-            if (file == null)
-            {
-                return null;
-            }
+            if (file == null) return null;
 
             file = DiffUtils.RelativeToAbsoluteFilepath(file, relativeDirectory);
             XDocument document = XDocument.Load(file);
@@ -44,24 +41,17 @@ namespace Barotrauma_Mod_Generator.PatchOperations
             document = diff.Root?.Elements()
                            .Aggregate(document,
                                       (current, patch) => Apply(patch, current));
-            
+
             diff.Root.ParseBoolAttribute("cleanup", out bool cleanup);
-            
+
             if (cleanup && document?.Root != null)
-            {
                 foreach (XElement element in document.Root.Elements().Reverse())
                 {
                     string xpath = element.GetAbsoluteXPath();
                     if (overrideXpaths.Contains(xpath))
-                    {
                         ConstructOverride.Override(element);
-                    }
-                    else if (!saveXpaths.Contains(xpath))
-                    {
-                        element.Remove();
-                    }
+                    else if (!saveXpaths.Contains(xpath)) element.Remove();
                 }
-            }
 
             switch (overrideRoot)
             {
