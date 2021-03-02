@@ -36,7 +36,8 @@ namespace Barotrauma_Mod_Generator.PatchOperations
             HashSet<string> saveXpaths =
                 XmlUtils.GetFilteredXPaths(diff, document,
                                            (patch, elt) =>
-                                               !patch.ParseBoolAttribute("override"));
+                                               !patch.ParseBoolAttribute("override") &&
+                                               (patch.Name.LocalName != "remove" || elt.Ancestors().Count() != 1));
 
             document = diff.Root?.Elements()
                            .Aggregate(document,
