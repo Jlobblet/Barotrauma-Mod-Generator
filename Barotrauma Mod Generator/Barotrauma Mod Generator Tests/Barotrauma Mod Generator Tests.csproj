@@ -79,6 +79,12 @@
     <None Update="TestData\Remove\Cleanup\Output.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="testData\Remove\Cleanup\SecondLevel\Diff.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="testData\Remove\Cleanup\SecondLevel\output.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
