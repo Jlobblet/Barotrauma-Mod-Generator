@@ -13,14 +13,10 @@ namespace Barotrauma_Mod_Generator.PatchOperations
         public override XDocument Apply()
         {
             XAttribute xpath = Patch.Attribute("sel");
-            if (xpath == null)
-            {
-                return Document;
-            }
+            if (xpath == null) return Document;
 
             foreach (XObject xObject in
                 (IEnumerable) Document.XPathEvaluate(xpath.Value))
-            {
                 switch (xObject)
                 {
                     case XElement element:
@@ -30,7 +26,6 @@ namespace Barotrauma_Mod_Generator.PatchOperations
                         attribute.Remove();
                         break;
                 }
-            }
 
             return Document;
         }

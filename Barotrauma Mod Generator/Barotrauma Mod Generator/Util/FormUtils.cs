@@ -18,44 +18,45 @@ namespace Barotrauma_Mod_Generator.Util
                                {
                                    IsFolderPicker = true,
                                    EnsureFileExists = true,
-                                   EnsurePathExists = true,
+                                   EnsurePathExists = true
                                };
             return dialog.ShowDialog() == CommonFileDialogResult.Ok ? dialog.FileName : "";
         }
-        
+
         public static string ShowFolderBrowserDialog(string defaultDirectory)
         {
-            using CommonOpenFileDialog dialog = new CommonOpenFileDialog
-            {
-                IsFolderPicker = true,
-                EnsureFileExists = true,
-                EnsurePathExists = true,
-                DefaultDirectory = defaultDirectory,
-            };
+            using var dialog = new CommonOpenFileDialog
+                               {
+                                   IsFolderPicker = true,
+                                   EnsureFileExists = true,
+                                   EnsurePathExists = true,
+                                   DefaultDirectory = defaultDirectory
+                               };
             return dialog.ShowDialog() == CommonFileDialogResult.Ok ? dialog.FileName : "";
         }
 
         public static string ShowFileBrowserDialog(string extension = "")
         {
-            using CommonOpenFileDialog dialog = new CommonOpenFileDialog
-            {
-                EnsureFileExists = true,
-                EnsurePathExists = true,
-            };
+            using var dialog = new CommonOpenFileDialog
+                               {
+                                   EnsureFileExists = true,
+                                   EnsurePathExists = true
+                               };
             dialog.FileOk += (sender, parameter) =>
-            {
-                var commonOpenFileDialog = (CommonOpenFileDialog)sender;
-                var filenames = new Collection<string>();
-                typeof(CommonOpenFileDialog)
-                    .GetMethod("PopulateWithFileNames", BindingFlags.Instance | BindingFlags.NonPublic)
-                    ?.Invoke(commonOpenFileDialog, new object[] { filenames });
-                string filename = filenames[0];
-                if (extension != "" && Path.GetExtension(filename) != extension)
-                {
-                    parameter.Cancel = true;
-                    MessageBox.Show($"The selected file does not have the extension {extension}.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            };
+                             {
+                                 var commonOpenFileDialog = (CommonOpenFileDialog) sender;
+                                 var filenames = new Collection<string>();
+                                 typeof(CommonOpenFileDialog)
+                                     .GetMethod("PopulateWithFileNames", BindingFlags.Instance | BindingFlags.NonPublic)
+                                     ?.Invoke(commonOpenFileDialog, new object[] {filenames});
+                                 string filename = filenames[0];
+                                 if (extension != "" && Path.GetExtension(filename) != extension)
+                                 {
+                                     parameter.Cancel = true;
+                                     MessageBox.Show($"The selected file does not have the extension {extension}.",
+                                                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                 }
+                             };
             return dialog.ShowDialog() == CommonFileDialogResult.Ok ? dialog.FileName : "";
         }
 
@@ -66,10 +67,7 @@ namespace Barotrauma_Mod_Generator.Util
 
         public static void CreateDirectories(IEnumerable<string> filepaths)
         {
-            foreach (string filepath in filepaths)
-            {
-                Directory.CreateDirectory(filepath);
-            }
+            foreach (string filepath in filepaths) Directory.CreateDirectory(filepath);
         }
 
         public static void CreatePatchedFile(string inputFilepath, string outputDirectory, string baroDirectory)
@@ -80,13 +78,9 @@ namespace Barotrauma_Mod_Generator.Util
             // if the input file is not a diff, assume it is a non-diff mod file to be copied across
             XDocument patched;
             if (Directory.Exists(baroDirectory))
-            {
                 patched = ApplyPatchOperation.ApplyAll(diff, baroDirectory) ?? diff;
-            }
             else
-            {
                 patched = ApplyPatchOperation.ApplyAll(diff) ?? diff;
-            }
 
             patched.Save(outputFile);
             Console.WriteLine("Saved to {0}", outputFile);

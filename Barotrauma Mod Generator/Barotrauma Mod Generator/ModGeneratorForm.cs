@@ -1,7 +1,7 @@
-﻿using Barotrauma_Mod_Generator.Util;
-using System;
+﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using Barotrauma_Mod_Generator.Util;
 
 namespace Barotrauma_Mod_Generator
 {
@@ -25,7 +25,8 @@ namespace Barotrauma_Mod_Generator
 
         private void OutputDirectoryBrowse_Click(object sender, EventArgs e)
         {
-            string filepath = FormUtils.ShowFolderBrowserDialog(BaroDirectoryTextbox.Text == "" ? BaroDirectoryTextbox.Text : null);
+            string filepath =
+                FormUtils.ShowFolderBrowserDialog(BaroDirectoryTextbox.Text == "" ? BaroDirectoryTextbox.Text : null);
             OutputDirectoryTextBox.Text = filepath;
         }
 
@@ -37,21 +38,23 @@ namespace Barotrauma_Mod_Generator
 
         private void MultiInputBrowseButton_Click(object sender, EventArgs e)
         {
-            string filepath = FormUtils.ShowFolderBrowserDialog(BaroDirectoryTextbox.Text == "" ? BaroDirectoryTextbox.Text : null);
+            string filepath =
+                FormUtils.ShowFolderBrowserDialog(BaroDirectoryTextbox.Text == "" ? BaroDirectoryTextbox.Text : null);
             MultiInputTextBox.Text = filepath;
         }
 
         private void ModeTabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
 
         private void GoButton_Click(object sender, EventArgs e)
         {
             string baroRootDirectory = BaroDirectoryTextbox.Text;
-            if (!Directory.Exists(baroRootDirectory)) { throw new ArgumentException("The Barotrauma Root Directory provided does not exist."); }
+            if (!Directory.Exists(baroRootDirectory))
+                throw new ArgumentException("The Barotrauma Root Directory provided does not exist.");
             string outputDirectory = OutputDirectoryTextBox.Text;
-            if (!Directory.Exists(outputDirectory)) { throw new ArgumentException("The output directory provided does not exist."); }
+            if (!Directory.Exists(outputDirectory))
+                throw new ArgumentException("The output directory provided does not exist.");
             if (ModeTabControl.SelectedTab == ModeTabControl.TabPages[0])
             {
                 // single
@@ -63,20 +66,19 @@ namespace Barotrauma_Mod_Generator
                 // multi
                 string inputDirectory = MultiInputTextBox.Text;
                 Console.WriteLine($"Creating files from diffs found in {inputDirectory}");
-                foreach (string inputDiff in Directory.EnumerateFiles(inputDirectory, "*.*", SearchOption.AllDirectories))
+                foreach (string inputDiff in Directory.EnumerateFiles(inputDirectory, "*.*",
+                                                                      SearchOption.AllDirectories))
                 {
-                    string relativeOutputDirectory = Path.GetRelativePath(inputDirectory, Path.GetDirectoryName(inputDiff)!);
+                    string relativeOutputDirectory =
+                        Path.GetRelativePath(inputDirectory, Path.GetDirectoryName(inputDiff)!);
                     string outputFileDirectory = Path.Combine(outputDirectory, relativeOutputDirectory);
                     Directory.CreateDirectory(outputFileDirectory);
                     if (Path.GetExtension(inputDiff) == ".xml")
-                    {
                         FormUtils.CreatePatchedFile(inputDiff, outputFileDirectory, baroRootDirectory);
-                    }
                     else
-                    {
                         File.Copy(inputDiff, Path.Combine(outputFileDirectory, Path.GetFileName(inputDiff)), true);
-                    }
                 }
+
                 Console.WriteLine("Finished!");
             }
         }

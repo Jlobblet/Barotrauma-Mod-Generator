@@ -8,69 +8,60 @@ namespace Barotrauma_Mod_Generator.Util
 {
     public class ControlWriter : TextWriter
     {
-        private readonly Control _textbox;
+        private readonly Control textbox;
+
         public ControlWriter(Control textbox)
         {
-            _textbox = textbox;
+            this.textbox = textbox;
         }
+
+        public override Encoding Encoding => Encoding.ASCII;
 
         public override void Write(char value)
         {
-            _textbox.Text += value;
+            textbox.Text += value;
         }
 
         public override void Write(string value)
         {
-            _textbox.Text += value;
+            textbox.Text += value;
         }
-
-        public override Encoding Encoding => Encoding.ASCII;
     }
 
     public class MultiTextWriter : TextWriter
     {
-        private readonly IEnumerable<TextWriter> _writers;
+        private readonly IEnumerable<TextWriter> writers;
+
         public MultiTextWriter(IEnumerable<TextWriter> writers)
         {
-            _writers = writers.ToList();
+            this.writers = writers.ToList();
         }
+
         public MultiTextWriter(params TextWriter[] writers)
         {
-            _writers = writers;
+            this.writers = writers;
         }
+
+        public override Encoding Encoding => Encoding.ASCII;
 
         public override void Write(char value)
         {
-            foreach (TextWriter writer in _writers)
-            {
-                writer.Write(value);
-            }
+            foreach (TextWriter writer in writers) writer.Write(value);
         }
 
         public override void Write(string value)
         {
-            foreach (TextWriter writer in _writers)
-            {
-                writer.Write(value);
-            }
+            foreach (TextWriter writer in writers) writer.Write(value);
         }
 
         public override void Flush()
         {
-            foreach (TextWriter writer in _writers)
-            {
-                writer.Flush();
-            }
+            foreach (TextWriter writer in writers) writer.Flush();
         }
 
         public override void Close()
         {
-            foreach (TextWriter writer in _writers)
-            {
-                writer.Close();
-            }
+            foreach (TextWriter writer in writers) writer.Close();
         }
-
-        public override Encoding Encoding => Encoding.ASCII;
     }
 }

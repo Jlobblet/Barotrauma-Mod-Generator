@@ -3,10 +3,10 @@ using System.Xml.Linq;
 
 namespace Barotrauma_Mod_Generator.PatchOperations
 {
-    public abstract class PatchOperation: IDisposable
+    public abstract class PatchOperation : IDisposable
     {
+        protected readonly XDocument Document;
         protected readonly XElement Patch;
-        protected  readonly XDocument Document;
 
         protected PatchOperation(XElement patch, XDocument document)
         {
@@ -14,10 +14,10 @@ namespace Barotrauma_Mod_Generator.PatchOperations
             Document = document;
         }
 
-        public abstract XDocument Apply();
-
         public void Dispose()
         {
         }
+
+        public abstract XDocument Apply();
     }
 }

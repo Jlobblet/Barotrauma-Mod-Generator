@@ -8,10 +8,7 @@ namespace Barotrauma_Mod_Generator.PatchOperations
         public static void Override(XElement elt)
         {
             XElement itemElement = elt.GetSecondLevelAncestor();
-            if (itemElement.Name.LocalName == "Override")
-            {
-                return;
-            }
+            if (itemElement.Name.LocalName == "Override") return;
 
             var overrideElement = new XElement("Override");
             overrideElement.Add(itemElement);

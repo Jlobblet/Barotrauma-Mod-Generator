@@ -17,7 +17,7 @@ namespace Barotrauma_Mod_Generator_Tests
             var expectedOutput = new HashSet<string>
                                  {
                                      "/Items/Item[1]",
-                                     "/Items/Item[2]",
+                                     "/Items/Item[2]"
                                  };
 
             Assert.Equal(expectedOutput, allElements);

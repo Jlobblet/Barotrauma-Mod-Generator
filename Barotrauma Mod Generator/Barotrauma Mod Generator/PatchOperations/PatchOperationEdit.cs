@@ -8,21 +8,16 @@ namespace Barotrauma_Mod_Generator.PatchOperations
     {
         public PatchOperationEdit(XElement patch, XDocument document) : base(patch, document)
         {
-            
         }
-        
-        
+
+
         public override XDocument Apply()
         {
             XAttribute xpath = Patch.Attribute("sel");
-            if (xpath == null)
-            {
-                return Document;
-            }
+            if (xpath == null) return Document;
 
             foreach (XObject xObject in
                 (IEnumerable) Document.XPathEvaluate(xpath.Value))
-            {
                 switch (xObject)
                 {
                     case XAttribute attribute:
@@ -41,7 +36,6 @@ namespace Barotrauma_Mod_Generator.PatchOperations
 
                         break;
                 }
-            }
 
             return Document;
         }

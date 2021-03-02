@@ -19,25 +19,17 @@ namespace Barotrauma_Mod_Generator.Util
 
         private static int IndexPosition(this XElement element)
         {
-            if (element == null)
-            {
-                throw new ArgumentException();
-            }
+            if (element == null) throw new ArgumentException();
 
-            if (element.Parent == null)
-            {
-                return -1;
-            }
+            if (element.Parent == null) return -1;
 
             var index = 1;
             foreach (XElement sibling in element.Parent.Elements(element.Name))
             {
-                if (sibling == element)
-                {
-                    return index;
-                }
+                if (sibling == element) return index;
                 index++;
             }
+
             throw new InvalidOperationException("Element could not be found");
         }
 
@@ -51,10 +43,7 @@ namespace Barotrauma_Mod_Generator.Util
 
         public static string GetAbsoluteXPath(this XElement element)
         {
-            if (element == null)
-            {
-                throw new ArgumentException();
-            }
+            if (element == null) throw new ArgumentException();
 
             IEnumerable<string> ancestors = element.Ancestors().Select(GetRelativeXPath);
             return string.Concat(ancestors.Reverse().ToArray()) + GetRelativeXPath(element);
@@ -68,29 +57,20 @@ namespace Barotrauma_Mod_Generator.Util
 
         public static string GetAttributeSafe(this XElement element, string attribute, out string value)
         {
-            if (element.Attribute(attribute) == null)
-            {
-                return value = element.GetAttributeSafe(attribute);
-            }
+            if (element.Attribute(attribute) == null) return value = element.GetAttributeSafe(attribute);
             return value = element.GetAttributeSafe(attribute);
         }
 
         public static bool ParseBoolAttribute(this XElement element, string attribute)
         {
-            if (element.Attribute(attribute) == null)
-            {
-                return false;
-            }
+            if (element.Attribute(attribute) == null) return false;
             bool.TryParse(element.GetAttributeSafe(attribute), out bool output);
             return output;
         }
 
         public static bool ParseBoolAttribute(this XElement element, string attribute, out bool value)
         {
-            if (element.Attribute(attribute) == null)
-            {
-                return value = false;
-            }
+            if (element.Attribute(attribute) == null) return value = false;
             return bool.TryParse(element.GetAttributeSafe(attribute), out value);
         }
 
@@ -100,26 +80,27 @@ namespace Barotrauma_Mod_Generator.Util
                            {
                                XAttribute attribute => attribute.Parent,
                                XElement element => element,
-                               _ => null,
+                               _ => null
                            };
             return elt;
         }
-        public static HashSet<string> GetFilteredXPaths(XDocument diff, XDocument document, Func<XElement, XElement, bool> filter = null)
+
+        public static HashSet<string> GetFilteredXPaths(XDocument diff, XDocument document,
+                                                        Func<XElement, XElement, bool> filter = null)
         {
-            HashSet<string> filteredXPaths = new HashSet<string>();
+            var filteredXPaths = new HashSet<string>();
             foreach (XElement patch in diff.Root?.Elements())
             {
                 string xpath = patch.GetAttributeSafe("sel");
-                if (xpath == null) { continue; }
-                foreach (XObject obj in (IEnumerable)document.Root.XPathEvaluate(xpath))
+                if (xpath == null) continue;
+                foreach (XObject obj in (IEnumerable) document.Root.XPathEvaluate(xpath))
                 {
                     XElement elt = obj.GetElement();
                     if (filter == null || filter(patch, elt))
-                    {
                         filteredXPaths.Add(elt.GetSecondLevelAncestor().GetAbsoluteXPath());
-                    }
                 }
             }
+
             return filteredXPaths;
         }
     }

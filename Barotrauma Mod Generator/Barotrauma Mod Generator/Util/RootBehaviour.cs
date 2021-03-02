@@ -4,6 +4,6 @@ namespace Barotrauma_Mod_Generator.Util
     {
         None,
         Override,
-        OverrideReplace,
+        OverrideReplace
     }
 }
