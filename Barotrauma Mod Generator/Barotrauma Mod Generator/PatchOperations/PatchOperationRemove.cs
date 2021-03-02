@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
@@ -15,8 +17,9 @@ namespace Barotrauma_Mod_Generator.PatchOperations
             XAttribute xpath = Patch.Attribute("sel");
             if (xpath == null) return Document;
 
-            foreach (XObject xObject in
-                (IEnumerable) Document.XPathEvaluate(xpath.Value))
+            IEnumerable<XObject> objs = ((IEnumerable) Document.XPathEvaluate(xpath.Value)).Cast<XObject>();
+
+            foreach (XObject xObject in objs.Reverse())
                 switch (xObject)
                 {
                     case XElement element:
