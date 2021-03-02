@@ -75,9 +75,9 @@ namespace Barotrauma_Mod_Generator.PatchOperations
         {
             document = patch.Name.LocalName switch
                        {
-                           "add" => PatchOperationAdd.Apply(patch, document),
-                           "remove" => PatchOperationRemove.Apply(patch, document),
-                           "replace" => PatchOperationEdit.Apply(patch, document),
+                           "add" => new PatchOperationAdd(patch, document).Apply(),
+                           "remove" => new PatchOperationRemove(patch, document).Apply(),
+                           "replace" => new PatchOperationEdit(patch, document).Apply(),
                            _ => document
                        };
             return document;

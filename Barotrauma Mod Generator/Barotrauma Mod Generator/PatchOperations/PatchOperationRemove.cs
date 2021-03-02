@@ -6,18 +6,20 @@ namespace Barotrauma_Mod_Generator.PatchOperations
 {
     internal class PatchOperationRemove : PatchOperation
     {
-        private const string ElementName = "remove";
-
-        internal new static XDocument Apply(XElement patch, XDocument document)
+        public PatchOperationRemove(XElement patch, XDocument document) : base(patch, document)
         {
-            XAttribute xpath = patch.Attribute("sel");
+        }
+
+        public override XDocument Apply()
+        {
+            XAttribute xpath = Patch.Attribute("sel");
             if (xpath == null)
             {
-                return document;
+                return Document;
             }
 
             foreach (XObject xObject in
-                (IEnumerable) document.XPathEvaluate(xpath.Value))
+                (IEnumerable) Document.XPathEvaluate(xpath.Value))
             {
                 switch (xObject)
                 {
@@ -30,7 +32,7 @@ namespace Barotrauma_Mod_Generator.PatchOperations
                 }
             }
 
-            return document;
+            return Document;
         }
     }
 }

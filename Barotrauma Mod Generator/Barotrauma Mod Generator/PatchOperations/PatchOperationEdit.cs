@@ -6,40 +6,44 @@ namespace Barotrauma_Mod_Generator.PatchOperations
 {
     internal class PatchOperationEdit : PatchOperation
     {
-        private const string ElementName = "replace";
-
-        internal new static XDocument Apply(XElement patch, XDocument document)
+        public PatchOperationEdit(XElement patch, XDocument document) : base(patch, document)
         {
-            XAttribute xpath = patch.Attribute("sel");
+            
+        }
+        
+        
+        public override XDocument Apply()
+        {
+            XAttribute xpath = Patch.Attribute("sel");
             if (xpath == null)
             {
-                return document;
+                return Document;
             }
 
             foreach (XObject xObject in
-                (IEnumerable) document.XPathEvaluate(xpath.Value))
+                (IEnumerable) Document.XPathEvaluate(xpath.Value))
             {
                 switch (xObject)
                 {
                     case XAttribute attribute:
-                        attribute.Value = patch.Value;
+                        attribute.Value = Patch.Value;
                         break;
                     case XElement element:
-                        if (string.IsNullOrWhiteSpace(patch.Value) && patch.HasElements)
+                        if (string.IsNullOrWhiteSpace(Patch.Value) && Patch.HasElements)
                         {
                             element.Elements().Remove();
-                            element.Add(patch.Elements());
+                            element.Add(Patch.Elements());
                         }
                         else
                         {
-                            element.Value = patch.Value;
+                            element.Value = Patch.Value;
                         }
 
                         break;
                 }
             }
 
-            return document;
+            return Document;
         }
     }
 }

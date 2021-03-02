@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -7,36 +8,38 @@ namespace Barotrauma_Mod_Generator.PatchOperations
 {
     internal class PatchOperationAdd : PatchOperation
     {
-        private const string ElementName = "add";
-
-        internal new static XDocument Apply(XElement patch, XDocument document)
+        public PatchOperationAdd(XElement patch, XDocument document) : base(patch, document)
         {
-            string xpath = patch.Attribute("sel")?.Value;
+        }
+
+        public override XDocument Apply()
+        {
+            string xpath = Patch.Attribute("sel")?.Value;
             if (xpath == null)
             {
-                return document;
+                return Document;
             }
 
             MatchCollection matches = Regex.Matches(xpath, @"^(?<element>.+)/@(?<attributeName>[a-zA-Z]+)$");
 
             if (!matches.Any())
             {
-                foreach (XElement elt in document.Root.XPathSelectElements(xpath))
+                foreach (XElement elt in Document.Root.XPathSelectElements(xpath))
                 {
-                    elt.Add(patch.Elements());
+                    elt.Add(Patch.Elements());
                 }
             }
             else
             {
                 string newXpath = matches[0].Groups["element"].Value;
                 string attributeName = matches[0].Groups["attributeName"].Value;
-                foreach (XElement elt in document.Root.XPathSelectElements(newXpath))
+                foreach (XElement elt in Document.Root.XPathSelectElements(newXpath))
                 {
-                    elt.SetAttributeValue(attributeName, patch.Value);
+                    elt.SetAttributeValue(attributeName, Patch.Value);
                 }
             }
 
-            return document;
+            return Document;
         }
     }
 }
