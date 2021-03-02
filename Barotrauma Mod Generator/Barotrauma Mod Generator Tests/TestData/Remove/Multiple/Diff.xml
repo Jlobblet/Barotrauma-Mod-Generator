@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Diff file="TestData/TestInput.xml">
+	<remove sel="/*/Item/* | /*/Item/@*[local-name() != 'identifier']"/>
+</Diff>

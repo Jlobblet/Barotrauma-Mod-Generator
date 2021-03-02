@@ -20,9 +20,11 @@ namespace Barotrauma_Mod_Generator_Tests
         [InlineData("TestData/Edit/Override/Root/Output.xml",
                     "TestData/Edit/Override/Root/Diff.xml")]
         [InlineData("TestData/Remove/Cleanup/Output.xml",
-                    "TestData/Remove/Cleanup/Diff.xml"),
-        InlineData("TestData/Remove/Cleanup/SecondLevel/Output.xml",
-                   "TestData/Remove/Cleanup/SecondLevel/Diff.xml")]
+                    "TestData/Remove/Cleanup/Diff.xml")]
+        [InlineData("TestData/Remove/Cleanup/SecondLevel/Output.xml",
+                    "TestData/Remove/Cleanup/SecondLevel/Diff.xml")]
+        [InlineData("TestData/Remove/Multiple/Output.xml",
+                    "TestData/Remove/Multiple/Diff.xml")]
         public void TestApplyAll(string outputPath, string diffPath)
         {
             XDocument outputData = XDocument.Load(outputPath);
