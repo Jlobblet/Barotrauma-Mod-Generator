@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
@@ -94,6 +95,18 @@ namespace Barotrauma_Mod_Generator.Util
                 string xpath = patch.GetAttributeSafe("sel");
                 if (xpath == null) continue;
                 foreach (XObject obj in (IEnumerable) document.Root.XPathEvaluate(xpath))
+                {
+                    XElement elt = obj.GetElement();
+                    if (filter == null || filter(patch, elt))
+                        filteredXPaths.Add(elt.GetSecondLevelAncestor().GetAbsoluteXPath());
+                }
+
+                // Add any elements that might be missing because the xpath selects an attribute that hasn't yet been added
+                MatchCollection matches = Regex.Matches(xpath, @"^(?<element>.+)/@(?<attributeName>[a-zA-Z]+)$");
+                if (!matches.Any())
+                    continue;
+
+                foreach (XObject obj in (IEnumerable) document.Root.XPathEvaluate(matches[0].Groups["element"].Value))
                 {
                     XElement elt = obj.GetElement();
                     if (filter == null || filter(patch, elt))
