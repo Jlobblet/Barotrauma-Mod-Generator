@@ -9,6 +9,7 @@ namespace Barotrauma_Mod_Generator_Tests
         [Theory]
         [InlineData("TestData/Add/Output.xml", "TestData/Add/Diff.xml")]
         [InlineData("TestData/Add/Attribute/Output.xml", "TestData/Add/Attribute/Diff.xml")]
+        [InlineData("TestData/Add/Attribute/Cleanup/Output.xml", "TestData/Add/Attribute/Cleanup/Diff.xml")]
         [InlineData("TestData/Remove/Output.xml", "TestData/Remove/Diff.xml")]
         [InlineData("TestData/Edit/Output.xml", "TestData/Edit/Diff.xml")]
         [InlineData("TestData/All/Output.xml", "TestData/All/Diff.xml")]
